@@ -40,7 +40,7 @@ var Prices = map[string]Price{
 	"bread":         119,
 	"apples":        595,
 	"chips":         245,
-	"milk":     150,
+	"milk":          150,
 }
 
 // RegisterItem adds the new item in the prices map.
@@ -69,6 +69,11 @@ type Cart struct {
 // HasItem returns whether the shopping cart has the provided item name.
 func (c *Cart) HasItem(item string) bool {
 	// TODO
+	for i := 0; i < len(c.Items); i++ {
+        if c.Items[i] == item {
+            return true
+        }
+    }
 	return false
 }
 
@@ -76,9 +81,19 @@ func (c *Cart) HasItem(item string) bool {
 // If item is not found in the prices map, then do not add it and print an error.
 func (c *Cart) AddItem(item string) {
 	// TODO
+	for key, _ := range Prices {
+        if key == item {
+            c.Items = append(c.Items, item)
+        	c.TotalPrice += Prices[item]
+        	fmt.Println("Item " + item + " added")
+        }
+    }
 }
 
 // Checkout displays the final cart balance and clears the cart completely.
 func (c *Cart) Checkout() {
 	// TODO
+	fmt.Println(c.Items)
+    fmt.Println("Total : " + c.TotalPrice.getPriceInEuro())
+    c = new(Cart)
 }

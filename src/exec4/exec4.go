@@ -16,9 +16,9 @@ func main() {
 
 	fmt.Println("========== Problem 2: Functional Programming ==========")
 	sum := func(x, y int) int { return x + y }
-	fmt.Printf("Fold([]int{1, 2, 3, 4, 5}, 0, add) = %v", Fold([]int{1, 2, 3, 4, 5}, 0, sum))
+	fmt.Printf("Fold([]int{1, 2, 3, 4, 5}, 0, add) = %v\n", Fold([]int{1, 2, 3, 4, 5}, 0, sum))
 	multiplication := func(x, y int) int { return x * y }
-	fmt.Printf("Fold([]int{1, 2, 3, 4, 5}, 1, mult) = %v", Fold([]int{1, 2, 3, 4, 5}, 1, multiplication))
+	fmt.Printf("Fold([]int{1, 2, 3, 4, 5}, 1, mult) = %v\n", Fold([]int{1, 2, 3, 4, 5}, 1, multiplication))
 }
 
 // Problem 1: Sorting Names
@@ -34,6 +34,8 @@ type Person struct {
 	FirstName string
 	LastName  string
 }
+
+var ID_index = 1
 
 type PersonSlice []*Person
 
@@ -55,11 +57,20 @@ func (p *Person) String() string {
 	return fmt.Sprintf("%s %s(%v)", p.FirstName, p.LastName, p.ID)
 }
 
+func (ps PersonSlice) Swap(i, j int) {
+    ps[i], ps[j] = ps[j], ps[i]
+}
+
 // NewPerson is a constructor for Person. ID should be assigned automatically in
 // sequential order, starting at 1 for the first Person created.
 func NewPerson(first, last string) *Person {
 	// TODO
-	return new(Person)
+	person := new(Person)
+    person.FirstName = first
+    person.LastName = last
+	person.ID = ID_index
+	ID_index++
+    return person
 }
 
 // Problem 2: Functional Programming
@@ -76,5 +87,10 @@ func NewPerson(first, last string) *Person {
 // This means f is a function which has 2 int arguments and returns an int.
 func Fold(s []int, v int, f func(int, int) int) int {
 	// TODO
-	return 0
+	if len(s) == 0 {
+        return v
+    } else {
+        res := f(v, s[0])
+        return Fold(s[1:], res, f)
+    }
 }

@@ -32,14 +32,21 @@ func broadcaster() {
 		case msg := <-messages:
 			// Broadcast incoming message to all
 			// clients' outgoing message channels.
-			//TODO 
+			//TODO
+            for clientIterator, _ := range clients {
+                if clients[clientIterator] == true {
+                    clientIterator <- msg
+                }
+            }
 
 		case cli := <-entering:
 			//TODO
+			clients[cli] = true
 		
 		//if a client leaving ?
-		case //TODO:
+		case cli := <-leaving:
 			//TODO
+			clients[cli] = false
 		}
 	}
 }
@@ -60,10 +67,15 @@ func handleConn(conn net.Conn) {
 
 	//send chat message via os.stdin
 	//TODO
-
+	scanner := bufio.NewScanner(conn)
+    for scanner.Scan() {
+        messages <- who + " said : " + scanner.Text()
+    }
 
 	//ctrl-D leaves os.stdin and leaves chatting
-	//TODO 
+	//TODO
+	messages <- who + " has left"
+    leaving <- ch
 
 	//Close the connection
 	conn.Close()
@@ -81,18 +93,20 @@ func clientWriter(conn net.Conn, ch <-chan string) {
 func main() {
 	//create listener
 	//TODO
-
+	server, _ := net.Listen("tcp", ":8000")
 	//create broadcaster
 	go broadcaster()
 	//Handle connection
 	for {
 		//1: listener should accept the incoming network connection
 		//TODO
+		conn, err := server.Accept()
 		if err != nil {
 			log.Print(err)
 			continue
 		}
 		//2.create connection using handleConn method
 		//TODO
+		go handleConn(conn)
 	}
 }

@@ -106,12 +106,19 @@ func SliceProduct(e []int) int {
 // Result should retain the same ordering as the input.
 func Unique(e []int) []int {
 	// TODO
-	// var result []int
-
-	// for _,val := range e{
-	// 	if 
-	// }
-	return nil
+	var result []int
+    for i := 0; i < len(e); i++ {
+        unique := true
+        for j := 0; j < len(e); j++ {
+            if e[i] == e[j] && i != j {
+                unique = false
+            }
+        }
+        if unique == true {
+            result = append(result, e[i])
+        }
+    }
+    return result
 }
 
 // InvertMap inverts a mapping of strings to ints into a mapping of ints to strings.
